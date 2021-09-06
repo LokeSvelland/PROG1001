@@ -13,7 +13,7 @@
  */
  int main ()  {
     int   heltall,  heltall2;     //  Har hittil laget/brukt slike
-                                  //    ENKELTVARIABLE.
+                                  //  ENKELTVARIABLE.
 
                                   //  NÅ:
     int  itall[10];               //  Lager 10 stk(!) int-variable.
