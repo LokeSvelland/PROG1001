@@ -12,5 +12,7 @@ int main() {
     sum = (lengde * bredde * hoyde);               //formelen for volum av kloss L*B*H
     printf("Volumet til klossen er: %i\n", sum);
 
+    // printf("de fire første tallene: %i\n", arstall);
+
     return 0;
 }
