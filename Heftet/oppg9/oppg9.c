@@ -10,8 +10,8 @@ int main()
         sekunder;
 
     timer = totalSekunder / 60 / 60;
-    minutter = ;
-    sekunder = ;
+  //  minutter = ;
+  //  sekunder = ;
 
     printf("312304 sekunder tilsvarer: %itime(r), %iminutt(er) og %isekunde(er)\n", timer, minutter, sekunder);
 
