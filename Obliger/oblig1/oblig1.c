@@ -10,9 +10,9 @@
 #include <stdlib.h>	    //  Memory-håndtering, streng-konvertering, mer .....
 #include <string.h>	    //  Håndtering av char-arrayer/tekster/strenger
 
-const int STRLEN = 15;
+const int STRLEN = 15;  //  Setter maksimal lengde på bok navn
 
-int main() {
+int main() {            // Starter hovedprogrammet
 
     char bok1[STRLEN],  // Lager 2 arrays til bok navn
          bok2[STRLEN];
@@ -26,7 +26,7 @@ int main() {
     printf("Bok 1:\n");
     printf("\tNavn: ");           gets(bok1);
     printf("\tAntall sider: ");   scanf("%i", &sideTall[0]);  getchar();
-    printf("\tsjanger (T - Fiksjon, T - Thriller, B - Biografi): ");
+    printf("\tsjanger (F - Fiksjon, T - Thriller, B - Biografi): ");
     scanf("%c", &sjanger[0]);
 
     getchar();          //getchar() for å hoppe over den /n som henger igjen
@@ -36,7 +36,7 @@ int main() {
     printf("\nBok 2:\n");
     printf("\tNavn: ");         gets(bok2);
     printf("\tAntall sider: ");   scanf("%i", &sideTall[1]);  getchar();
-    printf("\tsjanger (T - Fiksjon, T - Thriller, B - Biografi): ");
+    printf("\tsjanger (F - Fiksjon, T - Thriller, B - Biografi): ");
     scanf("%c", &sjanger[1]);
 
                         // printer ut navn og sjanger bok 1
@@ -46,12 +46,13 @@ int main() {
                         // printer ut navn og sjanger bok 2
     printf("\nNavn:    \t%s\n",   bok2);
     printf("Sjanger:   \t%c\n",   sjanger[1]);
+
                         // plusser antall elementer i hver av arrayene så deler
-                        // på størrelsen til 1 array, STRLEN er 15 i begge
-                        // derfor kan jeg dele på 15 og finne hvor mange
-                        // bøker som er lagt til
-    antallBoker = (sizeof(bok1) + sizeof(bok2)) / 15;
+                        // på størrelsen til 1 array, finner da antall
+                        // bøker som er lest
+    antallBoker = (sizeof(bok1) + sizeof(bok2)) / STRLEN;
     printf("\nBøker lest:        %i\n", antallBoker);
+    
                         // summerer sidetall
     sum = sideTall[0] + sideTall[1];
     printf("Sider lest totalt: %i\n", sum);
