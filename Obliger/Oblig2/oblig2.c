@@ -61,11 +61,28 @@ int main()
             {                               // legger til en bane om den er
                 antallBaner++;              // mindre enn MAXBANER
             }
-
+                                            // Leser inn lengde på banen
             printf("Hvor lang er den %i.Banen: ", antallBaner);
             scanf("%i", &svarI);
-            for (i = antallBaner - 1; i < MAXBANER; i++);
-            baneLengde[i] = svarI;
+            if(svarI <= 0) {
+                printf("Ugyldig lengde, returnerer til meny.\n");
+            }
+                                            // finner hvilken lomme i arrayet
+                                            // den skal ligge i
+            for (i = antallBaner - 1; i < baneLengde; i++);
+            baneLengde[i] = svarI;          // Oppdaterer lommen
+
+            // getchar();                   // Fjerner \n som ligger igjen
+
+            svarI = 0;
+            printf("Par på banen: \n");
+            scanf("%i", &svarI);
+            while (svarI < 2 || svarI > 8)
+            {
+                printf("Ugyldig mengde par.\n");
+            }
+            banePar[i] = svarI;
+            
         } while (svar == 'L' || svar == 'l');
 
     } while (svar != 'Q' || svar != 'q');
