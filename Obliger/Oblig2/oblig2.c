@@ -1,6 +1,10 @@
 /**
- * @file oblig2.c
- * @author Loke Svelland
+ * 
+ * Obligatorisk oppgave nr.2
+ * 
+ * @file    oblig2.c
+ * @author  Loke Svelland
+ * @version 1.0
  *
  * I denne oppgaven skal jeg lage ett program som leser inn nye og viser gamle
  * Frisbeegolf baner, og forteller litt om terrenget i banen og lengde
@@ -13,8 +17,8 @@
 #include <string.h>	    //  Håndtering av char-arrayer/tekster/strenger
 #include <stdbool.h>    //  Boolean
 
-const int MAXBANER = 18; ///< Maks antall baner.
-const int STRLEN = 100;  ///< Maks tekstlengde.
+const int MAXBANER = 18;                    ///< Maks antall baner.
+const int STRLEN = 100;                     ///< Maks tekstlengde.
 
 /**
  * Hovedprogram
@@ -23,7 +27,7 @@ int main()
 {
 
     char baneBeskrivelse[MAXBANER][STRLEN]; // Beskrivelse av banene.
-    char baneBeskrivelse1og2[][40] = {
+    char baneBeskrivelse1og2[][40] = {      // info til bane 1 og 2
         "Bane med mange trær og kratt",
         "Flatt terreng gjennom hele banen"
     };
@@ -36,7 +40,7 @@ int main()
         sum = 0,                            // Summere Par
         svarI;                              // Tar imot int svar fra bruker
     char svar,                              // Tar imot char svar fra bruker
-        valg;                               // Tar imot meny valg fra bruker
+         valg;                              // Tar imot meny valg fra bruker
 
     //Bane 1
     baneLengde[0] = 62;
@@ -52,16 +56,16 @@ int main()
     strcpy(baneBeskrivelse[1], baneBeskrivelse1og2[1]);
     antallBaner++;
 
-    do
+    do                                      // looper til den hører L/S/Q
     {
         printf("Meny:\nL - Legge til bane\nS - Se alle baner\nQ - Avslutt\n");
         scanf(" %c", &valg);                // Leser innn brukers svar
-        valg = toupper(valg);               //Gjør om svar til uppercase
+        valg = toupper(valg);               // Gjør om svar til uppercase
 
         switch (valg)                       // setter opp en switch case
         {                                   // for menyvalgene
         case 'L':
-            if (0 < antallBaner < MAXBANER) // vil ikke kjøre utenfor parameter
+            if (antallBaner < MAXBANER)     // vil ikke kjøre utenfor parameter
             {
                 printf("Hvor lang er den %i. Banen: ", antallBaner + 1);
                 scanf("%i", &svarI);        // Tar imot banens lengde
@@ -104,24 +108,33 @@ int main()
                 getchar();                  // fjerner \n som ligger igjen
                                             // etter scanf
 
+                                            // tar imot beskrivelse fra bruker
                 printf("Bane beskrivelse: ");
                 gets(baneBeskrivelse[antallBaner]); 
 
-                antallBaner++;
-                break;
+                antallBaner++;              // oppdaterer antall baner
+                break;              
             }
-            else if (antallBaner >= MAXBANER)
-            {
+            else if (antallBaner > MAXBANER)
+            {                               // kjører ikke L om antallbaner er 
+                                            // større eller lik MAXBANER
                 printf("Max baner lagt til\n\n");
                 break;
             }
 
         case 'S':
+                                            // for loop teller opp hvilken
+                                            // lomme man befinner seg i
                 for (i = 0; i < antallBaner; i++)
                 {
+                                            // skriver hvilken bane
                     printf("\nBane %i: \n", i + 1);
+                                            // skriver ut banelengde
                     printf("\tLengde: %i\n", baneLengde[i]);
+                                            // skriver hvor mange par på bane
                     printf("\tPar: %i\n", banePar[i]);
+                                            // Gjør om tall til string
+                                            // og skriver ut
                     if (baneOB[i] == 1)
                     {
                         printf("\tMed OB\n");
@@ -130,15 +143,19 @@ int main()
                     {
                         printf("\tUten OB\n");
                     }
+                                            // Skriver ut beskrivelse
                     printf("\tBeskrivelse: %s\n", baneBeskrivelse[i]);
-                    sum += banePar[i];
+                    sum += banePar[i];      // summerer banepar
                 }
+                                            // skriver hvor mange baner totalt
                 printf("\nAntall baner: %i\n", antallBaner);
 
-                printf("For å havne på par brukes: %i kast.\n", sum);
+                                            // Hvor mange slag for par totalt
+                printf("For å havne på par brukes: %i kast.\n\n", sum);
                 break;
-        case 'Q':
-                printf("Program avsluttes.");
+
+        case 'Q':                           // avslutter program
+                printf("Program avsluttes.\n");
                 return 0;
         }
     } while (svar != 'L' && svar != 'S' && svar != 'Q');
