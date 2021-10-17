@@ -1,8 +1,8 @@
 /**
  *  Skjelett/grunnlag for oblig nr 3 i GrProg, høsten 2021.
  *
- * @file    Oblig3.tpl
- * @author  Malin Foss, William Eide Seiner & FrodeH
+ * @file    Oblig3.c
+ * @author  Loke Svelland
  */
 
 
