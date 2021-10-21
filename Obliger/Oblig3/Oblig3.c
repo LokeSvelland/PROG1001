@@ -1,8 +1,12 @@
 /**
- *  Skjelett/grunnlag for oblig nr 3 i GrProg, høsten 2021.
+ *  Obligatorisk oppgave 3
  *
  * @file    Oblig3.c
  * @author  Loke Svelland
+ * 
+ * I dette programmet skal vi lage ett 3 på rad spill.
+ * Spillet skal finne vinner, nullstille brettet og skjekke om trekk er gyldig. 
+ * 
  */
 
 
@@ -63,7 +67,9 @@ int main() {
  */
 void nullstillBrett() {
 
-//     Lag innmaten
+for (int i = 0; i < ANTRUTER - 1; i++) {
+  gBrett[i] = ' ';
+}
 }
 
 
@@ -75,7 +81,8 @@ void nullstillBrett() {
  */
 bool sjekkBrett(const int n) {
 
-//     Lag innmaten
+if(gBrett[n] == ' ')
+{return true;} else {return false;}
 }
 
 
@@ -86,7 +93,23 @@ bool sjekkBrett(const int n) {
  */
 bool sjekkVinner() {
 
-//     Lag innmaten
+  if((gBrett[0] == gBrett[1] == gBrett[2]) != ' ')
+    {return true;}
+  else if((gBrett[3] == gBrett[4] == gBrett[5]) != ' ')
+    {return true;}
+  else if((gBrett[6] == gBrett[7] == gBrett[8]) != ' ')
+    {return true;}
+  else if((gBrett[0] == gBrett[3] == gBrett[6]) != ' ')
+    {return true;}
+  else if((gBrett[1] == gBrett[4] == gBrett[7]) != ' ')
+    {return true;}
+  else if((gBrett[2] == gBrett[5] == gBrett[8]) != ' ')
+    {return true;}
+  else if((gBrett[0] == gBrett[4] == gBrett[8]) != ' ')
+    {return true;}
+  else if((gBrett[2] == gBrett[4] == gBrett[6]) != ' ')
+    {return true;}
+    else {return false;}
 }
 
 
@@ -95,7 +118,14 @@ bool sjekkVinner() {
  */
 void skrivBrett() {
 
-//     Lag innmaten
+  printf("Spillbrett\n");
+  printf("---1-----2-----3---\n");
+  printf("|  %c  |  %c  |  %c  |\n", gBrett[0], gBrett[1], gBrett[2]);
+  printf("---1-----2-----3---\n");
+  printf("|  %c  |  %c  |  %c  |\n", gBrett[3], gBrett[4], gBrett[5]);
+  printf("---1-----2-----3---\n");
+  printf("|  %c  |  %c  |  %c  |\n", gBrett[6], gBrett[7], gBrett[8]);
+  printf("-------------------\n");
 }
 
 
