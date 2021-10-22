@@ -67,7 +67,7 @@ int main() {
  */
 void nullstillBrett() {
 
-for (int i = 0; i < ANTRUTER - 1; i++) {
+for (int i = 0; i < ANTRUTER; i++) {
   gBrett[i] = ' ';
 }
 }
@@ -82,7 +82,9 @@ for (int i = 0; i < ANTRUTER - 1; i++) {
 bool sjekkBrett(const int n) {
 
 if(gBrett[n] == ' ')
-{return true;} else {return false;}
+{return true;} 
+else if(gBrett[n] != ' ') 
+{return false;}
 }
 
 
@@ -121,9 +123,9 @@ void skrivBrett() {
   printf("Spillbrett\n");
   printf("---1-----2-----3---\n");
   printf("|  %c  |  %c  |  %c  |\n", gBrett[0], gBrett[1], gBrett[2]);
-  printf("---1-----2-----3---\n");
+  printf("---4-----5-----6---\n");
   printf("|  %c  |  %c  |  %c  |\n", gBrett[3], gBrett[4], gBrett[5]);
-  printf("---1-----2-----3---\n");
+  printf("---7-----8-----9---\n");
   printf("|  %c  |  %c  |  %c  |\n", gBrett[6], gBrett[7], gBrett[8]);
   printf("-------------------\n");
 }
@@ -138,6 +140,45 @@ void skrivBrett() {
  *  @see      sjekkVinner(...)
  */
 int spillSpillet() {
+  int svar = 0;
 
-//     Lag innmaten
+  for (int i = 0; i < 9; i++)
+  {
+    skrivBrett();
+    if (i % 2 == 0)
+    {
+      printf("Spiller 1, ditt trekk: ");
+      scanf(" %i", &svar);
+      if (gBrett[svar - 1] == ' ')
+      {
+        gBrett[svar - 1] = 'X';
+      }
+      else if (gBrett[svar - 1] != ' ')
+      {
+        printf("Rute ikke ledig\n");
+        printf("Spiller 1, ditt trekk: ");
+        scanf(" %i", &svar);
+      }
+    }
+    else if (i % 2 != 0)
+    {
+      printf("Spiller 2, ditt trekk: ");
+      scanf(" %i", &svar);
+      if (gBrett[svar - 1] == ' ')
+      {
+        gBrett[svar - 1] = 'O';
+      }
+      else if (gBrett[svar - 1] != ' ')
+      {
+        printf("Rute ikke ledig\n");
+        printf("Spiller 2, ditt trekk: ");
+        scanf(" %i", &svar);
+      }
+    }
+ /*   if(sjekkVinner() == true && gBrett[i] == 'X') {
+      return 1;
+    } else if(sjekkVinner() == true && gBrett[i] == 'O') {
+      return 2;
+    }*/
+  }
 }
