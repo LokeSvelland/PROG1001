@@ -3,10 +3,10 @@
  *
  * @file    Oblig3.c
  * @author  Loke Svelland
- * 
+ *
  * I dette programmet skal vi lage ett 3 på rad spill.
- * Spillet skal finne vinner, nullstille brettet og skjekke om trekk er gyldig. 
- * 
+ * Spillet skal finne vinner, nullstille brettet og skjekke om trekk er gyldig.
+ *
  */
 
 
@@ -35,10 +35,10 @@ int main() {
     char spiller1[STRLEN];           //  Begge spillernes navn.
     char spiller2[STRLEN];
     char nyttSpill;                  //  Kjøre programmet/spillet EN gang til.
-	int  vinner;                 //  Evt. spillernummer som har vunnet.
+	int  vinner;                       //  Evt. spillernummer som har vunnet.
 
     do  {
-      nullstillBrett();
+      nullstillBrett(); 
 
       skrivBrett();
 
@@ -66,7 +66,7 @@ int main() {
  *  Nullstiller/blanker ut alle brettets ruter.
  */
 void nullstillBrett() {
-
+                        // Setter alle rutene som ' '
 for (int i = 0; i < ANTRUTER; i++) {
   gBrett[i] = ' ';
 }
@@ -81,10 +81,9 @@ for (int i = 0; i < ANTRUTER; i++) {
  */
 bool sjekkBrett(const int n) {
 
-if(gBrett[n] == ' ')
-{return true;} 
-else if(gBrett[n] != ' ') 
-{return false;}
+if(gBrett[n] == ' ')    // sjekker om ruten er tom, og gir true eller false
+{return true;}
+else {return false;}
 }
 
 
@@ -94,22 +93,22 @@ else if(gBrett[n] != ' ')
  *  @return   Om noen har tre på rad (true) eller ei (false) i noen retning
  */
 bool sjekkVinner() {
-
-  if((gBrett[0] == gBrett[1] == gBrett[2]) != ' ')
+                        // Her testes alle de mulige vinner kombinasjonene
+  if(gBrett[0] == gBrett[1] && gBrett[0] == gBrett[2] && gBrett[0] != ' ')
     {return true;}
-  else if((gBrett[3] == gBrett[4] == gBrett[5]) != ' ')
+  else if(gBrett[3] == gBrett[4] && gBrett[3] == gBrett[5] && gBrett[3] != ' ')
     {return true;}
-  else if((gBrett[6] == gBrett[7] == gBrett[8]) != ' ')
+  else if(gBrett[6] == gBrett[7] && gBrett[6] == gBrett[8] && gBrett[6] != ' ')
     {return true;}
-  else if((gBrett[0] == gBrett[3] == gBrett[6]) != ' ')
+  else if(gBrett[0] == gBrett[3] && gBrett[0] == gBrett[6] && gBrett[0] != ' ')
     {return true;}
-  else if((gBrett[1] == gBrett[4] == gBrett[7]) != ' ')
+  else if(gBrett[1] == gBrett[4] && gBrett[1] == gBrett[7] && gBrett[1] != ' ')
     {return true;}
-  else if((gBrett[2] == gBrett[5] == gBrett[8]) != ' ')
+  else if(gBrett[2] == gBrett[5] && gBrett[2] == gBrett[8] && gBrett[2] != ' ')
     {return true;}
-  else if((gBrett[0] == gBrett[4] == gBrett[8]) != ' ')
+  else if(gBrett[0] == gBrett[5] && gBrett[0] == gBrett[8] && gBrett[0] != ' ')
     {return true;}
-  else if((gBrett[2] == gBrett[4] == gBrett[6]) != ' ')
+  else if(gBrett[2] == gBrett[4] && gBrett[2] == gBrett[6] && gBrett[2] != ' ')
     {return true;}
     else {return false;}
 }
@@ -140,45 +139,46 @@ void skrivBrett() {
  *  @see      sjekkVinner(...)
  */
 int spillSpillet() {
-  int svar = 0;
+  int svar = 0;         // nullstiller hjelpevariabel
 
-  for (int i = 0; i < 9; i++)
-  {
+  for (int i = 0; i < 9; i++) 
+  {                     // forløkke som velger hvem sitt trekk det er
     skrivBrett();
-    if (i % 2 == 0)
+    if (i % 2 == 0)     // hvis i % 2 == 0 er det spiller 1 sin tur
     {
       printf("Spiller 1, ditt trekk: ");
       scanf(" %i", &svar);
-      if (gBrett[svar - 1] == ' ')
-      {
+      if (sjekkBrett(svar-1) == true)
+      {                 // her sjekkes det om ruten er ledig
         gBrett[svar - 1] = 'X';
       }
-      else if (gBrett[svar - 1] != ' ')
+      else if (sjekkBrett(svar-1) == false)
       {
         printf("Rute ikke ledig\n");
         printf("Spiller 1, ditt trekk: ");
         scanf(" %i", &svar);
       }
     }
-    else if (i % 2 != 0)
+    else if (i % 2 != 0)// Hvis i % 2 != 0 så er det spiller 2 sin tur
     {
       printf("Spiller 2, ditt trekk: ");
       scanf(" %i", &svar);
-      if (gBrett[svar - 1] == ' ')
-      {
+      if (sjekkBrett(svar-1) == true)
+      {                 // sjekker om rute er ledig
         gBrett[svar - 1] = 'O';
       }
-      else if (gBrett[svar - 1] != ' ')
+      else if (sjekkBrett(svar-1) == false)
       {
         printf("Rute ikke ledig\n");
         printf("Spiller 2, ditt trekk: ");
         scanf(" %i", &svar);
       }
     }
- /*   if(sjekkVinner() == true && gBrett[i] == 'X') {
-      return 1;
+    if(sjekkVinner() == true && gBrett[i] == 'X') {
+      return 1;         // her sjekkes vinner
     } else if(sjekkVinner() == true && gBrett[i] == 'O') {
       return 2;
-    }*/
+    }
   }
 }
+
