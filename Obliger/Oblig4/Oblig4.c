@@ -1,5 +1,5 @@
 /**
- *  Skjelett/grunnlag for oblig nr 4 i GrProg, hÃ¸sten 2021.
+ *  Obligatorisk Oppgave 4
  *
  *  Det er mulig Ã¥:
  *     - legge inn nye produsenter
@@ -9,8 +9,8 @@
  *     - skrive ALLE produkter
  *     - slette ALLE produsenter og deres produkter
  *
- *  @file    Oblig4.tpl
- *  @author  Martin Kristensen Eide,  Peter Behncke Nes  &  FrodeH
+ *  @file    Oblig4.c
+ *  @author  Loke Svelland
  */
 
 
@@ -101,7 +101,13 @@ return 0;
  */
 struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn) {
 
-//     Lag innmaten
+    while (*produsent->navn)
+    {
+        printf("Hvilket produkt ser du etter: ");
+        scanf(" %c", &navn);
+        return *navn; 
+    }
+    return NULL;
 }
 
 
@@ -113,7 +119,13 @@ struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn)
  */
 struct Produsent* finnProdusent(const char* navn) {
 
-//     Lag innmaten
+while (*navn)
+{
+    printf("Hvilken produsent leter du etter: ");
+    scanf(" %c", &navn);
+    return *navn;
+}
+return NULL;
 }
 
 
