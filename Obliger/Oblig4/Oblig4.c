@@ -26,6 +26,7 @@
 #define MAXPRODUKTER    20      ///< Max antall produkter hos hver produsent
 const int STRLEN  =    100;     ///< Max tekstlengde
 const int MAXPRIS = 100000;     ///< Max pris
+char svarc = 0;                 // hjelpevariabel 
 
 
 /**
@@ -101,11 +102,17 @@ return 0;
  */
 struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn) {
 
-    while (*produsent->navn)
+    svarc = 0;
+
+    while (*produsent)
     {
         printf("Hvilket produkt ser du etter: ");
-        scanf(" %c", &navn);
-        return *navn; 
+        scanf(" %c", &svarc);
+        if (svarc == *navn)
+        {
+            return *navn;
+        } else return NULL;
+     
     }
     return NULL;
 }
@@ -119,11 +126,17 @@ struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn)
  */
 struct Produsent* finnProdusent(const char* navn) {
 
+svarc = 0;  
+
 while (*navn)
 {
     printf("Hvilken produsent leter du etter: ");
-    scanf(" %c", &navn);
-    return *navn;
+    scanf(" %c", &svarc);
+    if (svarc == *navn)
+    {
+        return *navn; 
+    } else return NULL; 
+    
 }
 return NULL;
 }
@@ -161,7 +174,11 @@ void leggTilEttProdukt()  {
  */
 void nyProdusent()  {
 
-//     Lag innmaten
+while (Produsent < MAXPRODUSENTER)
+{
+    /* code */
+}
+
 }
 
 
