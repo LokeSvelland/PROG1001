@@ -19,7 +19,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-//  #include "LesData.h"     //   Ligger pÃ¥ emnets EKSEMPLER-katalog.
+#include "LesData.h"            //   Ligger pÃ¥ emnets EKSEMPLER-katalog.
 
 
 #define MAXPRODUSENTER  50      ///< Max antall produsenter
