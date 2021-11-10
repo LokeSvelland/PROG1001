@@ -128,14 +128,9 @@ struct Produsent* finnProdusent(const char* navn) {
 
 svarc = 0;  
 
-while (*navn)
+while (gAntallProdusenter > 0)
 {
-    printf("Hvilken produsent leter du etter: ");
-    scanf(" %c", &svarc);
-    if (svarc == *navn)
-    {
-        return *navn; 
-    } else return NULL; 
+    lesText("Hvilken produsent leter du etter: ");
     
 }
 return NULL;
