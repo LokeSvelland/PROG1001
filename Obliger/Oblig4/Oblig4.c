@@ -28,16 +28,6 @@ const int STRLEN  =    100;     ///< Max tekstlengde
 const int MAXPRIS = 100000;     ///< Max pris
 char svarc = 0;                 // hjelpevariabel 
 
-
-/**
- *  Produkt (med navn, beskrivelse, pris).
- */
-struct Produkt {
-    char  *navn, *beskrivelse;
-    int   pris;
-};
-
-
 /**
  *  Produsent (med navn, by, antallprodukter, og array med produktene).
  */
@@ -45,6 +35,14 @@ struct Produsent {
     char   *navn, *by;
     int    antallProdukter;
     struct Produkt* produktene[MAXPRODUKTER];
+};
+
+/**
+ *  Produkt (med navn, beskrivelse, pris).
+ */
+struct Produkt {
+    char  *navn, *beskrivelse;
+    int   pris;
 };
 
 
@@ -102,19 +100,14 @@ return 0;
  */
 struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn) {
 
-    svarc = 0;
+svarc = 0;
 
-    while (*produsent)
-    {
-        printf("Hvilket produkt ser du etter: ");
-        scanf(" %c", &svarc);
-        if (svarc == *navn)
-        {
-            return *navn;
-        } else return NULL;
-     
-    }
-    return NULL;
+if (produktene < MAXPRODUKTER)
+{
+    svarc = lesText("\tHvilket produkt ser du etter: ", *navn);
+
+}
+
 }
 
 
@@ -130,7 +123,7 @@ svarc = 0;
 
 while (gAntallProdusenter > 0)
 {
-    lesText("Hvilken produsent leter du etter: ");
+    lesText("Hvilken produsent leter du etter: ", svarc);
     
 }
 return NULL;
@@ -144,7 +137,11 @@ return NULL;
  */
 void fjernAllkokerteData() {
 
-//     Lag innmaten
+printf("\n\n\tFrigir all allokert/avsatt memory .....\n\n");
+    for(int i = 0; i < gAntallProdusenter; i++) {
+    produsentSlettData(gAntallProdusenter[i]);        
+    }
+
 }
 
 
@@ -156,8 +153,15 @@ void fjernAllkokerteData() {
  *  @see   produsentNyttProdukt(...)
  */
 void leggTilEttProdukt()  {
+svarc = 0;
 
-//     Lag innmaten
+    if(gAntallProdusenter < MAXPRODUSENTER) {
+        svarc = lesText("Produsent av produktet: ", STRLEN);
+        gProdusentene[gAntallProdusenter] = (struct Produsent*) malloc(sizeof(struct Produsent));
+        produsentNyttProdukt(gProdusentene[gAntallProdusenter]);
+    } else {
+        printf("Ikke mulighet å legge til flere produkter.");
+    }
 }
 
 
@@ -169,9 +173,13 @@ void leggTilEttProdukt()  {
  */
 void nyProdusent()  {
 
-while (Produsent < MAXPRODUSENTER)
+svarc = 0;
+
+while (gAntallProdusenter < MAXPRODUSENTER)
 {
-    /* code */
+    gAntallProdusenter++;
+    printf("Ny produsent: \n");
+    produsentLesData();
 }
 
 }
@@ -196,7 +204,9 @@ void produktLesData(struct Produkt* produkt, const char* navn){
  */
 void produktSkrivData(const struct Produkt* produkt) {
 
-//     Lag innmaten
+printf("\tNavn         : %s", produkt->navn);
+printf("\t\nBeskrivelse: %s", produkt->beskrivelse);
+printf("\t\nPris       : %i", produkt->pris);
 }
 
 
@@ -207,7 +217,9 @@ void produktSkrivData(const struct Produkt* produkt) {
  */
 void produktSlettData(struct Produkt* produkt) {
 
-//     Lag innmaten
+free(produkt->navn);
+free(produkt->beskrivelse);
+free(produkt->pris);
 }
 
 
@@ -221,7 +233,9 @@ void produktSlettData(struct Produkt* produkt) {
  */
 void produsentLesData(struct Produsent* produsent, const char* navn){
 
-//     Lag innmaten
+produsent->navn = lagOgLesText("\tNavn på produsent");
+produsent->by   = lagOgLesText("\tByen produsent er allokert i");
+produsentNyttProdukt();
 }
 
 
@@ -234,7 +248,7 @@ void produsentLesData(struct Produsent* produsent, const char* navn){
  */
 void produsentNyttProdukt(struct Produsent* produsent, const char* navn)  {
 
-//     Lag innmaten
+produktLesData();
 }
 
 
@@ -246,7 +260,9 @@ void produsentNyttProdukt(struct Produsent* produsent, const char* navn)  {
  */
 void produsentSkrivData(const struct Produsent* produsent) {
 
-//     Lag innmaten
+printf("\tProdusentens navn:  %s", produsent->navn);
+printf("\t\nProdusentens by:  %s", produsent->by);
+printf("\t\nAntall produkter: %i", produsent->antallProdukter); 
 }
 
 
@@ -258,7 +274,10 @@ void produsentSkrivData(const struct Produsent* produsent) {
  */
 void produsentSlettData(struct Produsent* produsent) {
 
-//     Lag innmaten
+free(produsent->navn);
+free(produsent->by);
+free(produsent->antallProdukter);
+produktSlettData(produsent);
 }
 
 
@@ -269,7 +288,11 @@ void produsentSlettData(struct Produsent* produsent) {
  */
 void skrivAbsoluttAlt()  {
 
-//     Lag innmaten
+printf("Alle produsenter: ");
+for(int i = 0; i < gAntallProdusenter; i++) {
+    produsentSkrivData(gProdusentene[i]);
+}
+
 }
 
 
