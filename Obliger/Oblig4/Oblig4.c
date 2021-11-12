@@ -26,7 +26,7 @@
 #define MAXPRODUKTER    20      ///< Max antall produkter hos hver produsent
 const int STRLEN  =    100;     ///< Max tekstlengde
 const int MAXPRIS = 100000;     ///< Max pris
-char svarc = 0;                 // hjelpevariabel 
+char svarc = 0;                 // hjelpevariabel
 
 /**
  *  Produsent (med navn, by, antallprodukter, og array med produktene).
@@ -102,11 +102,11 @@ struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn)
 
 svarc = 0;
 
-if (produktene < MAXPRODUKTER)
+if (gAntallProdusenter > 0)
 {
-    svarc = lesText("\tHvilket produkt ser du etter: ", *navn);
-
-}
+    lesText("\tHvilket produkt ser du etter: ", svarc, STRLEN);
+    return svarc;
+} else {return NULL;}
 
 }
 
@@ -119,14 +119,14 @@ if (produktene < MAXPRODUKTER)
  */
 struct Produsent* finnProdusent(const char* navn) {
 
-svarc = 0;  
+svarc = 0;
 
-while (gAntallProdusenter > 0)
+if (gAntallProdusenter > 0)
 {
-    lesText("Hvilken produsent leter du etter: ", svarc);
-    
-}
-return NULL;
+    lesText("\tHvilken produsent ser du etter: ", svarc, STRLEN);
+    return svarc;
+} else {return NULL;}
+
 }
 
 
@@ -139,7 +139,7 @@ void fjernAllkokerteData() {
 
 printf("\n\n\tFrigir all allokert/avsatt memory .....\n\n");
     for(int i = 0; i < gAntallProdusenter; i++) {
-    produsentSlettData(gAntallProdusenter[i]);        
+//    produsentSlettData(gAntallProdusenter[i]);
     }
 
 }
@@ -156,9 +156,9 @@ void leggTilEttProdukt()  {
 svarc = 0;
 
     if(gAntallProdusenter < MAXPRODUSENTER) {
-        svarc = lesText("Produsent av produktet: ", STRLEN);
+        printf("\tNytt produkt: \n");
         gProdusentene[gAntallProdusenter] = (struct Produsent*) malloc(sizeof(struct Produsent));
-        produsentNyttProdukt(gProdusentene[gAntallProdusenter]);
+    //    produsentNyttProdukt(gProdusentene[gAntallProdusenter]);
     } else {
         printf("Ikke mulighet å legge til flere produkter.");
     }
@@ -177,9 +177,9 @@ svarc = 0;
 
 while (gAntallProdusenter < MAXPRODUSENTER)
 {
-    gAntallProdusenter++;
     printf("Ny produsent: \n");
-    produsentLesData();
+//    produsentLesData();
+    gAntallProdusenter++;
 }
 
 }
@@ -193,7 +193,9 @@ while (gAntallProdusenter < MAXPRODUSENTER)
  */
 void produktLesData(struct Produkt* produkt, const char* navn){
 
-//     Lag innmaten
+produkt->navn        = lagOgLesText("\tNavn på produkt");
+produkt->beskrivelse = lagOgLesText("\tKort beskrivelse");
+produkt->pris        = lesInt("\tPris", 0, MAXPRIS);
 }
 
 
@@ -217,8 +219,8 @@ printf("\t\nPris       : %i", produkt->pris);
  */
 void produktSlettData(struct Produkt* produkt) {
 
-free(produkt->navn);
-free(produkt->beskrivelse);
+free(*produkt->navn);
+free(*produkt->beskrivelse);
 free(produkt->pris);
 }
 
@@ -247,8 +249,9 @@ produsentNyttProdukt();
  *  @see     produktLesData(...)
  */
 void produsentNyttProdukt(struct Produsent* produsent, const char* navn)  {
-
-produktLesData();
+                        //leser data til produktet
+    produktLesData(produsent->produktene[produsent->antallProdukter], navn);
+    produsent->antallProdukter+=1;
 }
 
 
@@ -262,7 +265,7 @@ void produsentSkrivData(const struct Produsent* produsent) {
 
 printf("\tProdusentens navn:  %s", produsent->navn);
 printf("\t\nProdusentens by:  %s", produsent->by);
-printf("\t\nAntall produkter: %i", produsent->antallProdukter); 
+printf("\t\nAntall produkter: %i", produsent->antallProdukter);
 }
 
 
@@ -288,7 +291,7 @@ produktSlettData(produsent);
  */
 void skrivAbsoluttAlt()  {
 
-printf("Alle produsenter: ");
+printf("Alle produsenter: \n\n");
 for(int i = 0; i < gAntallProdusenter; i++) {
     produsentSkrivData(gProdusentene[i]);
 }
@@ -301,7 +304,7 @@ for(int i = 0; i < gAntallProdusenter; i++) {
  */
 void skrivMeny() {
   printf("\nProgrammets kommandoer:");
-  printf("\n\tN - Ny  produsent (og produkter)");
+  printf("\n\tN - Ny produsent (og produkter)");
   printf("\n\tL - Legg til ett produkt hos en produsent");
   printf("\n\tA - skriv Alle produsenter og alle deres produkter");
   printf("\n\tQ - Quit/avslutt\n");
