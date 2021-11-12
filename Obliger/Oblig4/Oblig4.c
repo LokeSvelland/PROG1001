@@ -26,7 +26,7 @@
 #define MAXPRODUKTER    20      ///< Max antall produkter hos hver produsent
 const int STRLEN  =    100;     ///< Max tekstlengde
 const int MAXPRIS = 100000;     ///< Max pris
-char svarc = 0;                 // hjelpevariabel
+char svarc[STRLEN] = 0;                 // hjelpevariabel
 
 /**
  *  Produsent (med navn, by, antallprodukter, og array med produktene).
@@ -90,6 +90,16 @@ int main() {
 return 0;
 }
 
+/**
+ *  Returnerer (om mulig) peker til en navngitt produsent.
+ *
+ *  @param    navn   - Navnet til produsenten
+ *  @return   Peker til produsenten eller NULL
+ */
+struct Produsent* finnProdusent(const char* navn) {
+    
+}
+
 
 /**
  *  Returnerer (om mulig) peker til et navngitt produkt hos en produsent.
@@ -100,35 +110,7 @@ return 0;
  */
 struct Produkt* finnProdukt(const struct Produsent* produsent, const char* navn) {
 
-svarc = 0;
-
-if (gAntallProdusenter > 0)
-{
-    lesText("\tHvilket produkt ser du etter: ", svarc, STRLEN);
-    return svarc;
-} else {return NULL;}
-
 }
-
-
-/**
- *  Returnerer (om mulig) peker til en navngitt produsent.
- *
- *  @param    navn   - Navnet til produsenten
- *  @return   Peker til produsenten eller NULL
- */
-struct Produsent* finnProdusent(const char* navn) {
-
-svarc = 0;
-
-if (gAntallProdusenter > 0)
-{
-    lesText("\tHvilken produsent ser du etter: ", svarc, STRLEN);
-    return svarc;
-} else {return NULL;}
-
-}
-
 
 /**
  *  Fjerner ALLE allokerte data fra minnet/memory.
@@ -156,11 +138,15 @@ void leggTilEttProdukt()  {
 svarc = 0;
 
     if(gAntallProdusenter < MAXPRODUSENTER) {
-        printf("\tNytt produkt: \n");
+        if(gAntallProdusenter > 0) {
+        svarc = lagOgLesText("\tNytt produkt: \n");
         gProdusentene[gAntallProdusenter] = (struct Produsent*) malloc(sizeof(struct Produsent));
-    //    produsentNyttProdukt(gProdusentene[gAntallProdusenter]);
+        produsentNyttProdukt(gProdusentene[gAntallProdusenter], svarc);
+        } else {
+            printf("\tIngen produsenter registrert.");
+        }
     } else {
-        printf("Ikke mulighet å legge til flere produkter.");
+        printf("\tIkke mulighet å legge til flere produkter.");
     }
 }
 
@@ -173,13 +159,21 @@ svarc = 0;
  */
 void nyProdusent()  {
 
-svarc = 0;
+    svarc = 0;
 
-while (gAntallProdusenter < MAXPRODUSENTER)
+if (gAntallProdusenter < MAXPRODUSENTER)
 {
-    printf("Ny produsent: \n");
-//    produsentLesData();
+    lesText("Ny produsent: \n", svarc);
+    if (finnProdusent(svarc) == true)
+    {
+        printf("produsent allerede registrert");
+    } else {
+    gProdusentene[gAntallProdusenter] = (struct Produsent*) malloc(sizeof(struct Produsent));
     gAntallProdusenter++;
+    produsentLesData(gProdusentene[gAntallProdusenter], svarc);
+    }
+} else {
+    printf("\tKan ikke legge til flere produsenter.\n");
 }
 
 }
@@ -193,7 +187,7 @@ while (gAntallProdusenter < MAXPRODUSENTER)
  */
 void produktLesData(struct Produkt* produkt, const char* navn){
 
-produkt->navn        = lagOgLesText("\tNavn på produkt");
+produkt->navn = navn;
 produkt->beskrivelse = lagOgLesText("\tKort beskrivelse");
 produkt->pris        = lesInt("\tPris", 0, MAXPRIS);
 }
@@ -235,9 +229,15 @@ free(produkt->pris);
  */
 void produsentLesData(struct Produsent* produsent, const char* navn){
 
-produsent->navn = lagOgLesText("\tNavn på produsent");
+svarc = 0;
+
+produsent->navn = navn;
 produsent->by   = lagOgLesText("\tByen produsent er allokert i");
-produsentNyttProdukt();
+produsent->antallProdukter = 0;
+svarc = lagOgLesText("\tnavn på produkt: ");
+if(finnProdukt(svarc) == true) {
+    printf("Produkt allerede registrert");
+} else {produsentNyttProdukt(produsent, svarc);}
 }
 
 
