@@ -106,6 +106,12 @@ int main()
  */
 struct Produsent *finnProdusent(const char *navn)
 {
+    for (int i = 0; i < gAntallProdusenter; i++)
+    {
+        if (!strcmp(gProdusentene[i]->navn, navn))
+            return gProdusentene[i];
+    }
+    return NULL;
 }
 
 /**
@@ -117,6 +123,12 @@ struct Produsent *finnProdusent(const char *navn)
  */
 struct Produkt *finnProdukt(const struct Produsent *produsent, const char *navn)
 {
+    for (int i = 0; i < gAntallProdusenter; i++)
+    {
+        if (!strcmp(produsent->produktene[i]->navn, navn))
+            return produsent->produktene[i]->navn;
+    }
+    return NULL;
 }
 
 /**
@@ -143,8 +155,6 @@ void fjernAllkokerteData()
  */
 void leggTilEttProdukt()
 {
-    free(svarc);
-
     if (gAntallProdusenter < MAXPRODUSENTER)
     {
         if (gAntallProdusenter > 0)
@@ -175,15 +185,15 @@ void nyProdusent()
     if (gAntallProdusenter < MAXPRODUSENTER)
     {
         lesText("\tNy produsent", svarc, STRLEN);
-        if (finnProdusent(svarc) == true)
+        if (finnProdusent(&svarc) == NULL)
         {
-            printf("\tProdusent allerede registrert");
+            gProdusentene[gAntallProdusenter] = (struct Produsent *)malloc(sizeof(struct Produsent));
+            produsentLesData(gProdusentene[gAntallProdusenter], svarc);
+            gAntallProdusenter++;
         }
         else
         {
-            gProdusentene[gAntallProdusenter] = (struct Produsent *)malloc(sizeof(struct Produsent));
-            gAntallProdusenter++;
-            produsentLesData(gProdusentene[gAntallProdusenter], svarc);
+            printf("\tProdusent allerede registrert");
         }
     }
     else
@@ -200,7 +210,6 @@ void nyProdusent()
  */
 void produktLesData(struct Produkt *produkt, const char *navn)
 {
-
     produkt->navn = navn;
     produkt->beskrivelse = lagOgLesText("\tKort beskrivelse");
     produkt->pris = lesInt("\tPris", 0, MAXPRIS);
@@ -213,10 +222,9 @@ void produktLesData(struct Produkt *produkt, const char *navn)
  */
 void produktSkrivData(const struct Produkt *produkt)
 {
-
-    printf("\tNavn         : %s", produkt->navn);
-    printf("\t\nBeskrivelse: %s", produkt->beskrivelse);
-    printf("\t\nPris       : %i", produkt->pris);
+    printf("\tNavn         : %s\n", produkt->navn);
+    printf("\tBeskrivelse  : %s\n", produkt->beskrivelse);
+    printf("\tPris         : %i\n\n", produkt->pris);
 }
 
 /**
@@ -226,7 +234,6 @@ void produktSkrivData(const struct Produkt *produkt)
  */
 void produktSlettData(struct Produkt *produkt)
 {
-
     free(produkt->navn);
     free(produkt->beskrivelse);
     free(produkt->pris);
@@ -245,14 +252,15 @@ void produsentLesData(struct Produsent *produsent, const char *navn)
     produsent->navn = navn;
     produsent->by = lagOgLesText("\tByen produsent er allokert i");
     produsent->antallProdukter = 0;
-    lesText("\tnavn på produkt: ", svarc, STRLEN);
-    if (finnProdukt(gAntallProdusenter, svarc) == true)
+    lesText("\tNavn på produkt: ", svarc, STRLEN);
+    if (finnProdukt(gAntallProdusenter, &svarc) == NULL)
     {
-        printf("Produkt allerede registrert");
+        produsent->produktene[gAntallProdusenter] = (struct Produkt *)malloc(sizeof(struct Produkt));
+        produsentNyttProdukt(produsent, svarc);
     }
     else
     {
-        produsentNyttProdukt(produsent, svarc);
+        printf("\tProdukt allerede registrert");
     }
 }
 
@@ -267,7 +275,7 @@ void produsentNyttProdukt(struct Produsent *produsent, const char *navn)
 {
     // leser data til produktet
     produktLesData(produsent->produktene[produsent->antallProdukter], navn);
-    produsent->antallProdukter += 1;
+    produsent->antallProdukter++;
 }
 
 /**
@@ -278,10 +286,10 @@ void produsentNyttProdukt(struct Produsent *produsent, const char *navn)
  */
 void produsentSkrivData(const struct Produsent *produsent)
 {
-
-    printf("\tProdusentens navn:  %s", produsent->navn);
-    printf("\t\nProdusentens by:  %s", produsent->by);
-    printf("\t\nAntall produkter: %i", produsent->antallProdukter);
+    printf("\tProdusentens navn:  %s\n", produsent->navn);
+    printf("\tProdusentens by  :  %s\n", produsent->by);
+    printf("\tAntall produkter :  %i\n", produsent->antallProdukter);
+    produktSkrivData(produsent);
 }
 
 /**
@@ -292,11 +300,10 @@ void produsentSkrivData(const struct Produsent *produsent)
  */
 void produsentSlettData(struct Produsent *produsent)
 {
-
     free(produsent->navn);
     free(produsent->by);
     free(produsent->antallProdukter);
-    produktSlettData(produsent);
+    produktSlettData(produsent->produktene[produsent->antallProdukter]);
 }
 
 /**
@@ -306,7 +313,6 @@ void produsentSlettData(struct Produsent *produsent)
  */
 void skrivAbsoluttAlt()
 {
-
     printf("Alle produsenter: \n\n");
     for (int i = 0; i < gAntallProdusenter; i++)
     {
