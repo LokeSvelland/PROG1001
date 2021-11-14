@@ -159,7 +159,7 @@ void leggTilEttProdukt()
     {
         if (gAntallProdusenter > 0)
         {
-            lesText("\tNytt produkt: \n", svarc, STRLEN);
+            lesText("\tNytt produkt\n", svarc, STRLEN);
             gProdusentene[gAntallProdusenter] = (struct Produsent *)malloc(sizeof(struct Produsent));
             produsentNyttProdukt(gProdusentene[gAntallProdusenter], svarc);
         }
@@ -185,7 +185,7 @@ void nyProdusent()
     if (gAntallProdusenter < MAXPRODUSENTER)
     {
         lesText("\tNy produsent", svarc, STRLEN);
-        if (finnProdusent(&svarc) == NULL)
+        if (finnProdusent(*svarc) == NULL)
         {
             gProdusentene[gAntallProdusenter] = (struct Produsent *)malloc(sizeof(struct Produsent));
             produsentLesData(gProdusentene[gAntallProdusenter], svarc);
@@ -211,7 +211,7 @@ void nyProdusent()
 void produktLesData(struct Produkt *produkt, const char *navn)
 {
     produkt->navn = navn;
-    produkt->beskrivelse = lagOgLesText("\tKort beskrivelse");
+    lesText("\tKort beskrivelse", produkt->beskrivelse, STRLEN);
     produkt->pris = lesInt("\tPris", 0, MAXPRIS);
 }
 
@@ -255,7 +255,7 @@ void produsentLesData(struct Produsent *produsent, const char *navn)
     lesText("\tNavn på produkt: ", svarc, STRLEN);
     if (finnProdukt(gAntallProdusenter, &svarc) == NULL)
     {
-        produsent->produktene[gAntallProdusenter] = (struct Produkt *)malloc(sizeof(struct Produkt));
+        produsent->produktene[produsent->antallProdukter] = (struct Produkt*)malloc(sizeof(struct Produkt));
         produsentNyttProdukt(produsent, svarc);
     }
     else
@@ -289,7 +289,7 @@ void produsentSkrivData(const struct Produsent *produsent)
     printf("\tProdusentens navn:  %s\n", produsent->navn);
     printf("\tProdusentens by  :  %s\n", produsent->by);
     printf("\tAntall produkter :  %i\n", produsent->antallProdukter);
-    produktSkrivData(produsent);
+    produktSkrivData(produsent->produktene[produsent->antallProdukter]);
 }
 
 /**
