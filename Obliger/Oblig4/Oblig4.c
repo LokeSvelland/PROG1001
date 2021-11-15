@@ -165,9 +165,9 @@ void leggTilEttProdukt()
         {               // sjekker om produsent er registrert eller ikke
             prodNavn = lagOgLesText("\tProduktets navn");
                         // leser inn nytt navn til produkt
-            if (finnProdukt(levNavn, prodNavn) == NULL)
+            if (finnProdukt(gProdusentene[gAntallProdusenter], prodNavn) == NULL)
             {           // hvis produkt allerede finnes returneres melding
-                produsentNyttProdukt(levNavn, prodNavn);
+                produsentNyttProdukt(gProdusentene[gAntallProdusenter], prodNavn);
             }
             else
             {
