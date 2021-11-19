@@ -308,6 +308,7 @@ void skrivMalerierPaaLokasjon()  {
 /**
  * Leser informasjon fra FILE - malerier.DTA
  * 
+ * TODO få den til å kjøre programmet, noe er feil
  */
 void lesFraFil() {
     FILE* innfil;       // peker til fil for input
