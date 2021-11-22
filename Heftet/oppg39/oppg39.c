@@ -308,39 +308,50 @@ void skrivMalerierPaaLokasjon()  {
 /**
  * Leser informasjon fra FILE - malerier.DTA
  * 
- * TODO få den til å kjøre programmet, noe er feil
+ * TODO programmet kjører men klarer ikke å lese inn fra fil
  */
 void lesFraFil() {
     FILE* innfil;       // peker til fil for input
-
-    printf("\t\n\nLeser inn fra fil - 'malerier.DTA' ......\n\n\n");
 
                         // åpner fil for input - "r"
     innfil = fopen("malerier.DTA", "r");
 
     if(innfil) {
+        printf("\t\n\nLeser inn fra fil - 'malerier.DTA' ......\n\n\n");
         fscanf(innfil, "%i", &gAntallMaleri);
-
-        while(!feof(innfil) && gAntallMaleri < MAXMALERIER) {
-
-            gMalerier[gAntallMaleri] = (struct Maleri*) malloc(sizeof(struct Maleri*));
-
-            maleriLesFraFil(innfil, gMalerier[gAntallMaleri]);
+        getc(innfil);
+          
+          for(int i = 0; i < gAntallMaleri; i++) {
+            gMalerier[i] = (struct Maleri*) malloc(sizeof(struct Maleri));
+            maleriLesFraFil(innfil, gMalerier[i]);
             gAntallMaleri++;
+          }
             fscanf(innfil, "%i", &gAntallMaleri);
-        }
+
     } else {
         printf("Klarte ikke å finne filen 'malerier.DTA'\n\n");
     }
     fclose(innfil);
 }
 
-void maleriLesFraFil(FILE* inn, struct Maleri* maleri) {
-fscanf(inn, "%i %i %i % i", &(gAntallMaleri), &(maleri->aar), &(maleri->bredde), &(maleri->hoyde));
-getc(inn);
-fgets(maleri->tittel, STRLEN, inn);
-fgets(maleri->sted,   STRLEN, inn);
-fgets(maleri->by,     STRLEN, inn);
+void maleriLesFraFil(FILE* inn, struct Maleri* m) {
+  char buffer[STRLEN];
+  int i;
+
+                        // Leser maleriets tittel
+  fgets(buffer, STRLEN, inn);   buffer[strlen(buffer)-1] = '\0';
+  m->tittel = (char*) malloc((strlen(buffer) + 1) * sizeof(char));
+  strcpy(m->tittel, buffer); 
+                        // Leser maleriets by
+  fgets(buffer, STRLEN, inn);   buffer[strlen(buffer)-1] = '\0';
+  m->by = (char*) malloc((strlen(buffer) + 1) * sizeof(char));
+  strcpy(m->by, buffer); 
+                        // Leser maleriets sted
+  fgets(buffer, STRLEN, inn);   buffer[strlen(buffer)-1] = '\0';
+  m->sted = (char*) malloc((strlen(buffer) + 1) * sizeof(char));
+  strcpy(m->sted, buffer); 
+
+  fscanf(inn, "%i %i %i", &m->aar, &m->bredde, &m->hoyde);
 }
 
 /**
@@ -357,7 +368,6 @@ void skrivTilFil() {
 
     if(utfil) {
         printf("\n\nSkriver til filen 'malerier.DTA' .....\n\n");
-        printf(utfil, "%i\n", gAntallMaleri);
         for(i = 0; i < gAntallMaleri; i++) {
             maleriSkrivTilFil(utfil, gMalerier[i]);
         }
@@ -367,7 +377,7 @@ void skrivTilFil() {
 }
 
 void maleriSkrivTilFil(FILE* ut, const struct Maleri* m) {
-    fprintf(ut, "%i\n%s\n%s\n%s\n%i\n%i\n%i", gMalerier[gAntallMaleri+1], m->tittel, m->by, m->sted, m->aar, m->bredde, m->hoyde);
+    fprintf(ut, "%i\n%s\n%s\n%s\n%i\n%i\n%i\n\n", gMalerier[gAntallMaleri], m->tittel, m->by, m->sted, m->aar, m->bredde, m->hoyde);
 }
 
 
