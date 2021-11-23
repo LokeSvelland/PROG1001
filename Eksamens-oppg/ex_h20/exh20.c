@@ -12,12 +12,12 @@ const int STRLEN = 60;     ///< Max. tekstlengde.
  */
 enum Kategori
 {
-    Ubestemt,
-    Fjernet,
-    Hentes,
-    Lagres,
-    Selges,
-    Gratis
+    Ubestemt,           // nr. 0
+    Fjernet,            // nr. 1
+    Hentes,             // nr. 2
+    Lagres,             // nr. 3
+    Selges,             // nr. 4
+    Gratis              // nr. 5
 };
 
 /**
@@ -60,11 +60,11 @@ int main()
     char kommando;
 
     lesFraFil(); // Oppgave 2G
-    
+
     skrivMeny();
-    
+
     kommando = lesChar("\nØnske");
-    
+
     while (kommando != 'Q')
     {
         switch (kommando)
@@ -111,7 +111,7 @@ void skrivMeny()
  * @see gjenstandLesData(...)
  */
 void nyGjenstand()
-{ 
+{
 char *ny;
 
     if(gAntallGjenstander < MAXGJENSTANDER) {
@@ -121,7 +121,7 @@ char *ny;
         gAntallGjenstander++;
     } else {
         printf("ikke plass til flere gjenstander\n");
-    } 
+    }
 }
 
 
@@ -131,10 +131,10 @@ char *ny;
  * @param g - Gjenstanden som får innlest/initiert sine data
  */
 void gjenstandLesData(struct Gjenstand *g)
-{ 
+{
     g->navn = lagOgLesText("\tNavn");
     g->hvem = lagOgLesText("\n\tHvem");
-    printf("\n\tStatus: ubestemt", g->status = Ubestemt);
+    printf("\n\tStatus: %d", g->status = Ubestemt);
 }
 
 
@@ -144,7 +144,7 @@ void gjenstandLesData(struct Gjenstand *g)
  * @see gjenstandSkrivData(...)
  */
 void skrivAlleGjenstandene()
-{ 
+{
     for(int i = 0; i < gAntallGjenstander; i++) {
         gjenstandSkrivData(gGjenstander[i]);
     }
@@ -155,18 +155,31 @@ void skrivAlleGjenstandene()
  * Oppgave 2B - Skriver ALT om EN gjenstand ut på skjermen.
  *
  * @param g - Gjenstanden som skrives ut
- * 
- * TODO finne en måte den kan printe status
+ *
+ * ! printf til status fungerer, men er laget på en janky måte
+ * ! MÅ SES PÅ
  */
 void gjenstandSkrivData(const struct Gjenstand *g)
-{ 
+{
     printf("\n\tNavn: %s", g->navn);
     printf("\n\tHvem: %s", g->hvem);
-    printf("\n\tStatus: %" g->status)
+    if(g->status == 0) {
+    printf("\n\tStatus: UBESTEMT\n");
+    } else if(g->status == 1) {
+        printf("\n\tStatus: FJERNET\n");
+    } else if(g->status == 2) {
+        printf("\n\tStatus: HENTES\n");
+    } else if(g->status == 3) {
+        printf("\n\tStatus: LAGRES\n");
+    } else if(g->status == 4) {
+        printf("\n\tStatus: SELGES\n");
+    } else if(g->status == 5) {
+        printf("\n\tStatus: GRATIS\n");
+    }
 }
 
 
-7
+
 /**
  * Oppgave 2C - Skriver ALT om ALLE gjenstander med EN GITT status.
  *
@@ -176,8 +189,24 @@ void gjenstandSkrivData(const struct Gjenstand *g)
  * @see gjenstandSkrivData(...)
  */
 void skrivAlleIKategori()
-{ 
-    /* LAG INNMATEN */
+{
+    char tegn,
+         kategori;
+
+    while (tegn != lesKategori())
+    {
+        tegn = lesChar("\n\tKatogori");
+        if(lesKategori() == tegn) {
+            toupper(tegn);
+            kategori = konverterTilKategori(tegn);
+            for(int i = 0; i < gAntallGjenstander; i++) {
+            gjenstandSkrivData(gGjenstander[i]);
+            }
+
+        } else {
+            printf("\n\tUlovlig verdi");
+    }
+    }
 }
 
 
@@ -187,8 +216,21 @@ void skrivAlleIKategori()
  * @return Forbokstaven i en LOVLIG kategori
  */
 char lesKategori()
-{ 
-    /* LAG INNMATEN */
+{
+    char tegn;
+    if ('U') {
+        return tegn = 'U';
+    } else if ('F') {
+        return tegn = 'F';
+    } else if ('H') {
+        return tegn = 'H';
+    } else if ('L') {
+        return tegn = 'L';
+    } else if ('S') {
+        return tegn = 'S';
+    } else if ('G') {
+        return tegn = 'G';
+    }
 }
 
 
@@ -199,8 +241,20 @@ char lesKategori()
  * @return Kategori/enum-verdi
  */
 enum Kategori konverterTilKategori(const char tegn)
-{ 
-    /* LAG INNMATEN */
+{
+    if (tegn == 'U') {
+        return Ubestemt;
+    } else if (tegn == 'F') {
+        return Fjernet;
+    } else if (tegn == 'H') {
+        return Hentes;
+    } else if (tegn == 'L') {
+        return Lagres;
+    } else if (tegn == 'S') {
+        return Selges;
+    } else if (tegn == 'G') {
+        return Gratis;
+    }
 }
 
 
@@ -211,8 +265,9 @@ enum Kategori konverterTilKategori(const char tegn)
  * @return Gjenstandens 'status'
  */
 enum Kategori gjenstandHentStatus(const struct Gjenstand *g)
-{ 
-    /* LAG INNMATEN */
+{
+    for(int i = 0; i < gAntallGjenstander; i++)
+    printf("%d", gGjenstander[i]->status);
 }
 
 
@@ -222,8 +277,18 @@ enum Kategori gjenstandHentStatus(const struct Gjenstand *g)
  * @see gjenstandSettHvem(...)
  */
 void settHvem()
-{ 
-    /* LAG INNMATEN */
+{
+    int nr;
+
+    nr = lesInt("\n\tGjenstandsnummer", 0, MAXGJENSTANDER);
+    if(nr < MAXGJENSTANDER) {
+        if (nr < 0)
+        {
+            printf("\nIngenting skjer");
+        } else {
+            gjenstandSettHvem(gGjenstander[nr-1]);
+        }
+    }
 }
 
 
@@ -234,8 +299,9 @@ void settHvem()
  * @see gjenstandSkrivData(...)
  */
 void gjenstandSettHvem(struct Gjenstand *g)
-{ 
-    /* LAG INNMATEN */
+{
+    g->hvem = lagOgLesText("\n\tHvem skal få gjenstanden");
+    gjenstandSkrivData(g);
 }
 
 
@@ -245,9 +311,20 @@ void gjenstandSettHvem(struct Gjenstand *g)
  * @see gjenstandEndreKategori(...)
  */
 void endreKategori()
-{ 
-    /* LAG INNMATEN */
+{
+    int nr;
+
+    nr = lesInt("\n\tGjenstandsnummer", 0, MAXGJENSTANDER);
+    if(nr < MAXGJENSTANDER) {
+        if (nr < 0)
+        {
+            printf("\nIngenting skjer");
+        } else {
+            gjenstandEndreKategori(gGjenstander[nr-1]);
+        }
+    }
 }
+
 
 
 /**
@@ -259,8 +336,22 @@ void endreKategori()
  * @see konverterTilKategori(...)
  */
 void gjenstandEndreKategori(struct Gjenstand *g)
-{ 
-    /* LAG INNMATEN */
+{
+    char tegn;
+    enum Kategori Kategori;
+
+    gjenstandSkrivData(g);
+    while(tegn != lesKategori()) {
+        tegn = lesChar("\n\tNy kategori");
+        if(lesKategori() == tegn) {
+            toupper(tegn);
+            Kategori = konverterTilKategori(tegn);
+            g->status = Kategori;
+            gjenstandSkrivData(g);
+        } else {
+            printf("\n\tUlovlig tegn");
+        }
+    }
 }
 
 
@@ -270,7 +361,7 @@ void gjenstandEndreKategori(struct Gjenstand *g)
  * @see gjenstandSkrivTilFil(...)
  */
 void skrivTilFil()
-{ 
+{
     /* LAG INNMATEN */
 }
 
@@ -282,7 +373,7 @@ void skrivTilFil()
  * @param g - Gjenstanden som skrives til fil
  */
 void gjenstandSkrivTilFil(FILE *ut, const struct Gjenstand *g)
-{ 
+{
     /* LAG INNMATEN */
 }
 
@@ -293,7 +384,7 @@ void gjenstandSkrivTilFil(FILE *ut, const struct Gjenstand *g)
  * @see gjenstandLesFraFil(...)
  */
 void lesFraFil()
-{ 
+{
     /* LAG INNMATEN */
 }
 
@@ -306,6 +397,6 @@ void lesFraFil()
  * @see konverterTilKategori(...)
  */
 void gjenstandLesFraFil(FILE *inn, struct Gjenstand *g)
-{ 
+{
     /* LAG INNMATEN */
 }
