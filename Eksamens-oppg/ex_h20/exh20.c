@@ -12,12 +12,12 @@ const int STRLEN = 60;     ///< Max. tekstlengde.
  */
 enum Kategori
 {
-    Ubestemt,           // nr. 0
-    Fjernet,            // nr. 1
-    Hentes,             // nr. 2
-    Lagres,             // nr. 3
-    Selges,             // nr. 4
-    Gratis              // nr. 5
+    Ubestemt, // nr. 0
+    Fjernet,  // nr. 1
+    Hentes,   // nr. 2
+    Lagres,   // nr. 3
+    Selges,   // nr. 4
+    Gratis    // nr. 5
 };
 
 /**
@@ -48,7 +48,7 @@ void gjenstandSkrivTilFil(FILE *ut, const struct Gjenstand *g); // Oppgave 2F
 void lesFraFil();                                               // Oppgave 2G
 void gjenstandLesFraFil(FILE *inn, struct Gjenstand *g);        // Oppgave 2G
 
-int gAntallGjenstander;               ///< Antall gjenstander hittil registrert.
+int gAntallGjenstander;                         ///< Antall gjenstander hittil
 struct Gjenstand *gGjenstander[MAXGJENSTANDER]; ///< Alle gjenstandene.
 
 /**
@@ -104,7 +104,6 @@ void skrivMeny()
     printf("\tQ = Quit/avslutt\n");
 }
 
-
 /**
  * Oppgave 2A - Legger inn (om mulig) en ny gjenstand i datastrukturen.
  *
@@ -112,18 +111,20 @@ void skrivMeny()
  */
 void nyGjenstand()
 {
-char *ny;
+    char *ny;
 
-    if(gAntallGjenstander < MAXGJENSTANDER) {
-        printf("\nNy gjenstand:\n\n");
-        gGjenstander[gAntallGjenstander] = (struct Gjenstand*) malloc(sizeof(struct Gjenstand));
+    if (gAntallGjenstander < MAXGJENSTANDER)
+    {
+        printf("\nNy gjenstand nr.%i:\n\n", gAntallGjenstander + 1);
+        gGjenstander[gAntallGjenstander] = (struct Gjenstand *)malloc(sizeof(struct Gjenstand));
         gjenstandLesData(gGjenstander[gAntallGjenstander]);
         gAntallGjenstander++;
-    } else {
+    }
+    else
+    {
         printf("ikke plass til flere gjenstander\n");
     }
 }
-
 
 /**
  * Oppgave 2A - Leser inn relevante data og nullstiller andre.
@@ -133,10 +134,10 @@ char *ny;
 void gjenstandLesData(struct Gjenstand *g)
 {
     g->navn = lagOgLesText("\tNavn");
-    g->hvem = lagOgLesText("\n\tHvem");
+    g->hvem = (char *)malloc(4 * sizeof(char)); // Setter av plas til hvem
+    strcpy(g->hvem, "---");                     // Lager --- som hvem
     printf("\n\tStatus: %d", g->status = Ubestemt);
 }
-
 
 /**
  * Oppgave 2B - Skriver ALT om ALLE gjenstander.
@@ -145,11 +146,13 @@ void gjenstandLesData(struct Gjenstand *g)
  */
 void skrivAlleGjenstandene()
 {
-    for(int i = 0; i < gAntallGjenstander; i++) {
+    printf("\n\tAlle gjenstandene i oversikten:\n");
+    for (int i = 0; i < gAntallGjenstander; i++)
+    {
+        printf("\n\tNr.%3i   \n", i + 1);
         gjenstandSkrivData(gGjenstander[i]);
     }
 }
-
 
 /**
  * Oppgave 2B - Skriver ALT om EN gjenstand ut på skjermen.
@@ -162,23 +165,23 @@ void skrivAlleGjenstandene()
 void gjenstandSkrivData(const struct Gjenstand *g)
 {
     printf("\n\tNavn: %s", g->navn);
-    printf("\n\tHvem: %s", g->hvem);
-    if(g->status == 0) {
-    printf("\n\tStatus: UBESTEMT\n");
-    } else if(g->status == 1) {
-        printf("\n\tStatus: FJERNET\n");
-    } else if(g->status == 2) {
-        printf("\n\tStatus: HENTES\n");
-    } else if(g->status == 3) {
-        printf("\n\tStatus: LAGRES\n");
-    } else if(g->status == 4) {
-        printf("\n\tStatus: SELGES\n");
-    } else if(g->status == 5) {
-        printf("\n\tStatus: GRATIS\n");
+    printf("\n\tHvem: %s\n\t", g->hvem);
+    switch (g->status)  { //  Gjør om 'status'
+    case Ubestemt:
+        printf("UBESTEMT\n\n");     break; // (enum-verdi) til tekst
+    case Fjernet:
+        printf("FJERNET\n\n");      break;
+    case Hentes:
+        printf("HENTES\n\n");       break;
+    case Lagres:
+        printf("LAGRES\n\n");       break;
+    case Selges:
+        printf("SELGES\n\n");       break;
+    case Gratis:
+        printf("GRATIS\n\n");       break;
     }
+    printf("\n");
 }
-
-
 
 /**
  * Oppgave 2C - Skriver ALT om ALLE gjenstander med EN GITT status.
@@ -189,26 +192,17 @@ void gjenstandSkrivData(const struct Gjenstand *g)
  * @see gjenstandSkrivData(...)
  */
 void skrivAlleIKategori()
-{
-    char tegn,
-         kategori;
+{ //  Leser tegn og gjør om til enum-verdi:
+    enum Kategori status = konverterTilKategori(lesKategori());
 
-    while (tegn != lesKategori())
-    {
-        tegn = lesChar("\n\tKatogori");
-        if(lesKategori() == tegn) {
-            toupper(tegn);
-            kategori = konverterTilKategori(tegn);
-            for(int i = 0; i < gAntallGjenstander; i++) {
-            gjenstandSkrivData(gGjenstander[i]);
-            }
-
-        } else {
-            printf("\n\tUlovlig verdi");
-    }
-    }
+    printf("\n\tAlle gjenstandene i denne kategorien:\n");
+    for (int i = 0; i < gAntallGjenstander; i++)
+        if (gjenstandHentStatus(gGjenstander[i]) == status)
+        {                                        // Status-match:
+            printf("\t   Nr.%3i:  ", i + 1);     //  Skriver gjenstandnummer.
+            gjenstandSkrivData(gGjenstander[i]); //  Hver skriver seg selv.
+        }
 }
-
 
 /**
  * Oppgave 2C - Leser LOVLIG kategori ('U', 'F', 'H', 'L', 'S', 'G').
@@ -217,22 +211,14 @@ void skrivAlleIKategori()
  */
 char lesKategori()
 {
-    char tegn;
-    if ('U') {
-        return tegn = 'U';
-    } else if ('F') {
-        return tegn = 'F';
-    } else if ('H') {
-        return tegn = 'H';
-    } else if ('L') {
-        return tegn = 'L';
-    } else if ('S') {
-        return tegn = 'S';
-    } else if ('G') {
-        return tegn = 'G';
-    }
+    char stat;
+    do
+    {
+        stat = lesChar("\tKategori (U(bestemt), F(jernet), H(entes), L(agres), S(elges), G(ratis))");
+    } while (stat != 'U' && stat != 'F' && stat != 'H' && //  Sikrer lovlig
+             stat != 'L' && stat != 'S' && stat != 'G');  //    bokstav.
+    return stat;
 }
-
 
 /**
  * Oppgave 2C - Gjør om en (lovlig) bokstav til kategori, returnerer dette.
@@ -242,21 +228,17 @@ char lesKategori()
  */
 enum Kategori konverterTilKategori(const char tegn)
 {
-    if (tegn == 'U') {
-        return Ubestemt;
-    } else if (tegn == 'F') {
-        return Fjernet;
-    } else if (tegn == 'H') {
-        return Hentes;
-    } else if (tegn == 'L') {
-        return Lagres;
-    } else if (tegn == 'S') {
-        return Selges;
-    } else if (tegn == 'G') {
-        return Gratis;
+    switch (tegn)
+    {
+    case 'U':   return Ubestemt;
+    case 'F':   return Fjernet;
+    case 'H':   return Hentes;
+    case 'L':   return Lagres;
+    case 'S':   return Selges;
+    case 'G':   return Gratis;
+    default:    return Ubestemt; //  Ulovlig/uaktuell bokstav.
     }
 }
-
 
 /**
  * Oppgave 2C - Returnerer kun gjentandens status.
@@ -266,10 +248,8 @@ enum Kategori konverterTilKategori(const char tegn)
  */
 enum Kategori gjenstandHentStatus(const struct Gjenstand *g)
 {
-    for(int i = 0; i < gAntallGjenstander; i++)
-    printf("%d", gGjenstander[i]->status);
+    return (g->status);
 }
-
 
 /**
  * Oppgave 2D - Endrer (kanskje) EN aktuell gjenstands 'hvem'.
@@ -280,17 +260,19 @@ void settHvem()
 {
     int nr;
 
-    nr = lesInt("\n\tGjenstandsnummer", 0, MAXGJENSTANDER);
-    if(nr < MAXGJENSTANDER) {
+    nr = lesInt("\n\tGjenstandsnummer", 0, gAntallGjenstander);
+    if (nr < gAntallGjenstander)
+    {
         if (nr < 0)
         {
             printf("\nIngenting skjer");
-        } else {
-            gjenstandSettHvem(gGjenstander[nr-1]);
+        }
+        else
+        {
+            gjenstandSettHvem(gGjenstander[nr - 1]);
         }
     }
 }
-
 
 /**
  * Oppgave 2D - Endrer en gjenstands til 'hvem/hvor' den skal.
@@ -300,10 +282,14 @@ void settHvem()
  */
 void gjenstandSettHvem(struct Gjenstand *g)
 {
-    g->hvem = lagOgLesText("\n\tHvem skal få gjenstanden");
+    printf("\n\tGjenstanden skal pt til:  %s.\n", g->hvem);
+
+    free(g->hvem);                             //  Sletter nåværende 'hvem'.
+    g->hvem = lagOgLesText("\tTil hvem/hvor"); //  Setter ny 'hvem'.
+
+    printf("\nNår hvem/hvor er endret:\n");
     gjenstandSkrivData(g);
 }
-
 
 /**
  * Oppgave 2E - Endrer (kanskje) EN aktuell gjenstands kategori/status.
@@ -314,18 +300,19 @@ void endreKategori()
 {
     int nr;
 
-    nr = lesInt("\n\tGjenstandsnummer", 0, MAXGJENSTANDER);
-    if(nr < MAXGJENSTANDER) {
+    nr = lesInt("\n\tGjenstandsnummer", 0, gAntallGjenstander);
+    if (nr < gAntallGjenstander)
+    {
         if (nr < 0)
         {
-            printf("\nIngenting skjer");
-        } else {
-            gjenstandEndreKategori(gGjenstander[nr-1]);
+            printf("\nIngen gjenstand enrer kategori/status.\n");
+        }
+        else
+        {
+            gjenstandEndreKategori(gGjenstander[nr - 1]);
         }
     }
 }
-
-
 
 /**
  * Oppgave 2E - Endrer en gjenstands kategori/status.
@@ -337,23 +324,17 @@ void endreKategori()
  */
 void gjenstandEndreKategori(struct Gjenstand *g)
 {
-    char tegn;
-    enum Kategori Kategori;
 
+    printf("\nNåværende data om gjenstanden:\n");
     gjenstandSkrivData(g);
-    while(tegn != lesKategori()) {
-        tegn = lesChar("\n\tNy kategori");
-        if(lesKategori() == tegn) {
-            toupper(tegn);
-            Kategori = konverterTilKategori(tegn);
-            g->status = Kategori;
-            gjenstandSkrivData(g);
-        } else {
-            printf("\n\tUlovlig tegn");
-        }
-    }
-}
 
+    printf("Ny kategori/status skal være:\n");
+    //  Ny kategori leses og settes:
+    g->status = konverterTilKategori(lesKategori());
+
+    printf("\nNår kategori/status er endret:\n");
+    gjenstandSkrivData(g);
+}
 
 /**
  * Oppgave 2F - Skriver ALLE gjenstandene til fil.
@@ -362,9 +343,26 @@ void gjenstandEndreKategori(struct Gjenstand *g)
  */
 void skrivTilFil()
 {
-    /* LAG INNMATEN */
-}
+    FILE *utfil;
 
+    utfil = fopen("gjenstander.DT2", "w");
+
+    if (utfil)
+    {
+        printf("\n\nSkriver til fil 'Gjenstander.DT2 ......\n\n");
+
+        fprintf(utfil, "%i\n", gAntallGjenstander);
+
+        for (int i = 0; i < gAntallGjenstander; i++)
+        {
+            gjenstandSkrivTilFil(utfil, gGjenstander[i]);
+        }
+    }
+    else
+    {
+        printf("\nKlarte ikke åpne fil\n\n");
+    }
+}
 
 /**
  * Oppgave 2F - Alle EN gjenstands data skrives ut på fil.
@@ -374,9 +372,22 @@ void skrivTilFil()
  */
 void gjenstandSkrivTilFil(FILE *ut, const struct Gjenstand *g)
 {
-    /* LAG INNMATEN */
+    switch (g->status)      { //  Skriver enum (status)
+    case Ubestemt:
+        fprintf(ut, "U");   break; //    ut som EN bokstav:
+    case Fjernet:
+        fprintf(ut, "F");   break;
+    case Hentes:
+        fprintf(ut, "H");   break;
+    case Lagres:
+        fprintf(ut, "L");   break;
+    case Selges:
+        fprintf(ut, "S");   break;
+    case Gratis:
+        fprintf(ut, "G");   break;
+    }
+    fprintf(ut, "%s\n%s\n\n", g->navn, g->hvem);
 }
-
 
 /**
  * Oppgave 2G - Leser ALLE gjenstandene fra fil.
@@ -385,9 +396,24 @@ void gjenstandSkrivTilFil(FILE *ut, const struct Gjenstand *g)
  */
 void lesFraFil()
 {
-    /* LAG INNMATEN */
-}
+    FILE *innfil = fopen("gjenstander.DTA", "r"); //  Åpner aktuell fil:
 
+    if (innfil)
+    {                                              //  Filen finnes:
+        fscanf(innfil, "%i", &gAntallGjenstander); //  Leser antall gjenstander.
+        getc(innfil);                              //  Leser avsluttende '\n'.
+                                                   //  Alle gjenstander lages og leses:
+        for (int i = 0; i < gAntallGjenstander; i++)
+        {
+            gGjenstander[i] = (struct Gjenstand *)malloc(sizeof(struct Gjenstand));
+            gjenstandLesFraFil(innfil, gGjenstander[i]); // Leser selv.
+        }
+        printf("\n\tGjenstander er lest inn fra 'gjenstander.DTA'!\n\n");
+        fclose(innfil); //  Lukker åpen fil.
+    }
+    else //  Filen ikke funnet:
+        printf("\n\tFant ikke filen 'gjenstander.DTA'!\n\n");
+}
 
 /**
  * Oppgave 2G - Leser ALT om EN gjenstand fra fil.
@@ -398,5 +424,20 @@ void lesFraFil()
  */
 void gjenstandLesFraFil(FILE *inn, struct Gjenstand *g)
 {
-    /* LAG INNMATEN */
+    char buffer[STRLEN]; //  Buffer for innlest tekst.
+    char tegn;           //  Innlest 'UFHLSG' fra filen.
+
+    tegn = getc(inn);               //  Leser 'U', 'F', 'H', 'L', 'S' eller 'G'.
+    getc(inn);                              //  Leser/forkaster EN ' ' (blank).
+    g->status = konverterTilKategori(tegn); // Setter status ut fra bokstav.
+
+    fgets(buffer, STRLEN, inn);
+    buffer[strlen(buffer) - 1] = '\0';
+    g->navn = (char *)malloc((strlen(buffer) + 1) * sizeof(char));
+    strcpy(g->navn, buffer);
+
+    fgets(buffer, STRLEN, inn);
+    buffer[strlen(buffer) - 1] = '\0';
+    g->hvem = (char *)malloc((strlen(buffer) + 1) * sizeof(char));
+    strcpy(g->hvem, buffer);
 }
