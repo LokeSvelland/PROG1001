@@ -159,8 +159,6 @@ void skrivAlleGjenstandene()
  *
  * @param g - Gjenstanden som skrives ut
  *
- * ! printf til status fungerer, men er laget på en janky måte
- * ! MÅ SES PÅ
  */
 void gjenstandSkrivData(const struct Gjenstand *g)
 {
